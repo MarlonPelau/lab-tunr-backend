@@ -6,6 +6,15 @@ const checkName = (req, res, next) => {
       res.status(400).json({ error: 'Name is required' })
     }
   }
+
+  const checkArtist = (req, res, next) => {
+    if (req.body.artist) {
+        console.log('artist is aight')
+        return next()
+    }   else {
+        res.status(400).json({error: 'Artist is required'})
+    }
+  }
 // this code below is for two different error messages to help with easier error findings
 // const checkName = (req, res, next) => {
 //     if (!req.body.name) {
@@ -23,7 +32,6 @@ const checkName = (req, res, next) => {
     if (
       is_favorite === "true" ||
       is_favorite === "false" ||
-      is_favorite === "true" ||
       typeof is_favorite == "boolean"
     ) {
       console.log("received boolean");
@@ -33,4 +41,4 @@ const checkName = (req, res, next) => {
     }
   };
   
-  module.exports = { checkBoolean, checkName }
+  module.exports = { checkBoolean, checkName, checkArtist }

@@ -29,7 +29,7 @@ tunes.get("/:id", async (req, res) => {
     }
 });
 
-tunes.post("/", checkName, async (req, res) => {
+tunes.post("/", checkName, checkArtist, checkBoolean, async (req, res) => {
     try {
         const tune = await createTune(req.body);
         res.json(tune);
