@@ -4,12 +4,21 @@ const db = require('../db/dbConfig.js')
 
 const getAllTunes = async () => {
     try {
-        const allTunes = await db.any('SELECT * FROM tunes')
+        const allTunes = await db.any('SELECT * FROM tunes ORDER BY name');
         return allTunes
       } catch (error) {
         return error
       }
     }
+
+    // const sortedTunes = async () => {
+    //     try {
+    //         const allTunes = await db.any('SELECT * FROM tunes')
+    //         return allTunes
+    //       } catch (error) {
+    //         return error
+    //       }
+    //     }
 
     const getTune = async (id) => {
         try {
@@ -32,4 +41,29 @@ const getAllTunes = async () => {
         }
     }
 
-module.exports = { getAllTunes, getTune, createTune }
+    const deleteTune = async (id) => {
+        try {
+          const deletedTune = await db.one(
+            "DELETE FROM tunes WHERE id = $1 RETURNING *",
+            id
+          );
+          return deletedTune;
+        } catch (error) {
+          return error;
+        }
+      };
+
+      const updateTune = async (id, tune) => {
+        const {name, artist, album, time, is_favorite} = tune;
+        try {
+          const updatedTune = await db.one(
+            "UPDATE tunes SET name=$1, artist=$2, album=$3, time=$4, is_favorite=$5 WHERE id=$6 RETURNING *",
+            [name, artist, album, time, is_favorite, id]
+          );
+          return updatedTune;
+        } catch (error) {
+          return error;
+        }
+      };
+
+module.exports = { getAllTunes, getTune, createTune, deleteTune, updateTune }

@@ -4,6 +4,8 @@ const {
     getAllTunes, 
     getTune,
     createTune,
+    deleteTune,
+    updateTune,
 } = require('../queries/tunes');
 const {checkName, checkArtist, checkBoolean } = require("../validations/checkTunes");
 
@@ -11,6 +13,8 @@ const tunes = express.Router();
 
 tunes.get("/", async (req, res) => {
   const allTunes = await getAllTunes()
+//   const sortedTunes = tunes.sort((a, b) => a.title.localeCompare(b.title));
+//   res.json(sortedTunes);
   if (allTunes[0]) {
     res.status(200).json(allTunes)
   } else {
@@ -38,16 +42,25 @@ tunes.post("/", checkName, checkArtist, checkBoolean, async (req, res) => {
     }
 });
 
-tunes.put("/:id", (req, res) => {
+// update is what we're doing here below
+tunes.put("/:id", async (req, res) => {
   const { id } = req.params;
-
-  res.json({ message: `Update item at id: ${id}` });
+  if (id) {
+    const updatedTune = await updateTune(id, req.body);
+    res.status(200).json(updatedTune);
+  } else {
+    res.status(400).json({ error });
+  }
 });
 
-tunes.delete("/:id", (req, res) => {
+tunes.delete("/:id", async (req, res) => {
   const { id } = req.params;
-
-  res.json({ message: `Delete Item based on id: ${id}` });
+  const deletedTune = await deleteTune(id);
+  if (deletedTune.id) {
+    res.status(200).json(deletedTune);
+  } else {
+    res.status(404).json("Tune not found");
+  }
 });
 
 module.exports = tunes;
