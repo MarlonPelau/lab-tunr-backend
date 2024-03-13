@@ -4,7 +4,7 @@ const db = require('../db/dbConfig.js')
 
 const getAllTunes = async () => {
     try {
-        const allTunes = await db.any('SELECT * FROM tunes ORDER BY name');
+        const allTunes = await db.any('SELECT * FROM tunes ORDER BY name DESC');
         return allTunes
       } catch (error) {
         return error
