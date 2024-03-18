@@ -15,17 +15,7 @@ const checkName = (req, res, next) => {
         res.status(400).json({error: 'Artist is required'})
     }
   }
-// this code below is for two different error messages to help with easier error findings
-// const checkName = (req, res, next) => {
-//     if (!req.body.name) {
-//       res.status(400).json({ error: "Name is required" });
-//     } else if (!req.body.description) {
-//       res.status(400).json({ error: "Description is required" });
-//     } else {
-//       return next();
-//     }
-//   };
-  // validations/checkTunes/js
+
   const checkBoolean = (req, res, next) => {
     const { is_favorite } = req.body;
   

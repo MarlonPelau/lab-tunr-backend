@@ -1,4 +1,7 @@
 const express = require("express");
+const tunes = express.Router();
+const spinnersController = require('./spinnersController.js');
+tunes.use('/:tunes_id/spinners', spinnersController);
 
 const { 
     getAllTunes, 
@@ -6,21 +9,46 @@ const {
     createTune,
     deleteTune,
     updateTune,
+    getFilteredTunes,
+    getAllTunesAscOrder,
+    getAllTunesDescOrder,
 } = require('../queries/tunes');
 const {checkName, checkArtist, checkBoolean } = require("../validations/checkTunes");
 
-const tunes = express.Router();
-
+// INDEX route to retrieve all tunes
 tunes.get("/", async (req, res) => {
-  const allTunes = await getAllTunes()
-//   const sortedTunes = tunes.sort((a, b) => a.title.localeCompare(b.title));
-//   res.json(sortedTunes);
-  if (allTunes[0]) {
-    res.status(200).json(allTunes)
-  } else {
-    res.status(500).json({ error: 'server error' })
-  }
-});
+    try {
+      // Extracting 'order' and 'is_favorite' parameters from the request query
+      const { order, is_favorite } = req.query;
+  
+      // Handle sorting if 'order' parameter is provided
+      if (order === "asc") {
+        // Sorting tunes by name in ascending or descending order based on 'order' value
+        const ascendingOrderTunes = await getAllTunesAscOrder();
+        res.json({ tunes: ascendingOrderTunes });
+      } else if (order === "desc") {
+        const descendingOrderTunes = await getAllTunesDescOrder();
+        res.json({ tunes: descendingOrderTunes });
+      }
+  
+      // Filtering tunes by 'is_favorite' if provided
+      else if (is_favorite === "true" || is_favorite === "false") {
+        // Converting string value to boolean
+        const isFavorite = await getFilteredTunes(is_favorite);
+        // Appending WHERE clause to filter tunes by 'is_favorite' value
+        res.json({ isFavorite: isFavorite });
+      } else {
+        // Fetching all tunes from the database using the 'getAllTunes' function
+        const allTunes = await getAllTunes();
+        // Sending the fetched tunes as a JSON response
+        res.status(200).json(allTunes);
+      }
+    } catch (error) {
+      // Handling server errors
+      console.error(error);
+      res.status(500).json({ error: "server error" });
+    }
+  });
 
 
 tunes.get("/:id", async (req, res) => {

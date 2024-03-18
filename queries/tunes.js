@@ -1,24 +1,55 @@
-
 const { errors } = require('pg-promise')
 const db = require('../db/dbConfig.js')
 
 const getAllTunes = async () => {
     try {
-        const allTunes = await db.any('SELECT * FROM tunes WHERE is_favorite = FALSE ORDER BY name');
+        const allTunes = await db.any('SELECT * FROM tunes');
         return allTunes
       } catch (error) {
         return error
       }
     }
 
-    // const sortedTunes = async () => {
-    //     try {
-    //         const allTunes = await db.any('SELECT * FROM tunes')
-    //         return allTunes
-    //       } catch (error) {
-    //         return error
-    //       }
-    //     }
+    // Function to retrieve filtered tunes based on whether they are marked as favorites or not
+const getFilteredTunes = async (isFavorite) => {
+    try {
+      // Querying the database to get tunes filtered by the is_favorite column
+      const filteredTunes = await db.any(
+        "SELECT * FROM tunes WHERE is_favorite = $1",
+        isFavorite
+      );
+      return filteredTunes; // Returning the filtered tunes
+    } catch (error) {
+      return error; // Returning any error encountered during the process
+    }
+  };
+  
+  // Function to retrieve all tunes in ascending order of their names
+  const getAllTunesAscOrder = async () => {
+    try {
+      // Querying the database to get all tunes ordered by name in ascending order
+      const allTunesAscOrder = await db.any(
+        "SELECT * FROM tunes ORDER BY name ASC"
+      );
+  
+      return allTunesAscOrder; // Returning the tunes ordered in ascending order
+    } catch (error) {
+      return error; // Returning any error encountered during the process
+    }
+  };
+  
+  // Function to retrieve all tunes in descending order of their names
+  const getAllTunesDescOrder = async () => {
+    try {
+      // Querying the database to get all tunes ordered by name in descending order
+      const allTunesDescOrder = await db.any(
+        "SELECT * FROM tunes ORDER BY name DESC"
+      );
+      return allTunesDescOrder; // Returning the tunes ordered in descending order
+    } catch (error) {
+      return error; // Returning any error encountered during the process
+    }
+  };  
 
     const getTune = async (id) => {
         try {
@@ -66,4 +97,4 @@ const getAllTunes = async () => {
         }
       };
 
-module.exports = { getAllTunes, getTune, createTune, deleteTune, updateTune }
+module.exports = { getAllTunes, getTune, createTune, deleteTune, updateTune, getFilteredTunes, getAllTunesAscOrder, getAllTunesDescOrder }
