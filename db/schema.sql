@@ -13,6 +13,8 @@ CREATE TABLE tunes (
  is_favorite BOOLEAN
 );
 
+-- DROP TABLE IF EXISTS spinners;
+
 CREATE TABLE spinners (
  id SERIAL PRIMARY KEY,
  performer TEXT,
