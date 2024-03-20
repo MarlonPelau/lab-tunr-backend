@@ -7,6 +7,8 @@ INSERT INTO tunes (name, artist, album, time, is_favorite) VALUES
 ('Falling in Love', 'Surface', NULL, '6:25', true),
 ('Mary Mary', 'Run-Dmc', 'TOUGHER THAN LEATHER', '3:13', true);
 
+\c spinners;
+
 INSERT INTO spinners (tunes_id, performer, playlist, titles, DJ, content)
 VALUES
 ('1', 'Cam"ron', 'COME HOME CLUE', 'Hey Ma, Oh Boy, Welcome to New York City', 'DJ Clue', 'The type of Killa Cam armory I had to have in my crate before walking into the club!'),
